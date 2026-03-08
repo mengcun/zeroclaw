@@ -296,6 +296,7 @@ pub struct LarkChannel {
     /// Bot open_id resolved at runtime via `/bot/v3/info`.
     resolved_bot_open_id: Arc<StdRwLock<Option<String>>>,
     mention_only: bool,
+    pub platform: LarkPlatform,
     /// When true, use Feishu (CN) endpoints; when false, use Lark (international).
     use_feishu: bool,
     /// How to receive events: WebSocket long-connection or HTTP webhook.
@@ -322,6 +323,7 @@ impl LarkChannel {
             port,
             allowed_users,
             LarkPlatform::Lark,
+            mention_only,
         )
     }
 
@@ -332,6 +334,7 @@ impl LarkChannel {
         port: Option<u16>,
         allowed_users: Vec<String>,
         platform: LarkPlatform,
+        mention_only: bool,
     ) -> Self {
         Self {
             app_id,
@@ -339,6 +342,7 @@ impl LarkChannel {
             verification_token,
             port,
             allowed_users,
+            platform,
             resolved_bot_open_id: Arc::new(StdRwLock::new(None)),
             mention_only,
             use_feishu: true,
@@ -362,6 +366,7 @@ impl LarkChannel {
             config.verification_token.clone().unwrap_or_default(),
             config.port,
             config.allowed_users.clone(),
+            platform,
             config.mention_only,
         );
         ch.receive_mode = config.receive_mode.clone();

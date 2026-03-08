@@ -2914,7 +2914,7 @@ fn collect_configured_channels(
         } else {
             channels.push(ConfiguredChannel {
                 display_name: "Lark",
-                channel: Arc::new(LarkChannel::from_lark_config(lk)),
+                channel: Arc::new(LarkChannel::from_config(lk)),
             });
         }
     }
@@ -2923,7 +2923,14 @@ fn collect_configured_channels(
     if let Some(ref fs) = config.channels_config.feishu {
         channels.push(ConfiguredChannel {
             display_name: "Feishu",
-            channel: Arc::new(LarkChannel::from_feishu_config(fs)),
+            channel: Arc::new(LarkChannel::new(
+                fs.app_id.clone(),
+                fs.app_secret.clone(),
+                fs.verification_token.clone().unwrap_or_default(),
+                fs.port,
+                fs.allowed_users.clone(),
+                false,
+            )),
         });
     }
 
